@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="popup.css"/>
+  <title>QTranslate Popup</title>
+</head>
+<body>
+  <div class="popup-wrap">
+    <!-- Auto-close timer bar -->
+    <div class="timer-bar" id="timer-bar">
+      <div class="timer-fill" id="timer-fill"></div>
+    </div>
+
+    <!-- Header -->
+    <div class="popup-header">
+      <div class="popup-langs" id="popup-langs">
+        <span class="pl-src" id="pl-src">—</span>
+        <span class="pl-arrow">⇒</span>
+        <span class="pl-tgt" id="pl-tgt">—</span>
+      </div>
+      <div class="popup-actions">
+        <button class="pa-btn" id="btn-toggle-src" title="عرض النص الأصلي">𝐀</button>
+        <button class="pa-btn" id="btn-tts"        title="قراءة">🔊</button>
+        <button class="pa-btn" id="btn-copy"       title="نسخ">📋</button>
+        <button class="pa-btn" id="btn-expand"     title="فتح في النافذة الرئيسية">⛶</button>
+        <button class="pa-btn" id="btn-pin"        title="تثبيت">📌</button>
+        <button class="pa-btn close-pa" id="btn-close" title="إغلاق">✕</button>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="popup-body">
+      <div id="state-loading" class="pop-loading">
+        <div class="pop-spinner"></div>
+        <span>جاري الترجمة...</span>
+      </div>
+      <div id="state-result" class="pop-result" style="display:none"></div>
+      <!-- Original text panel (hidden by default) -->
+      <div id="state-original" class="pop-original" style="display:none"></div>
+      <div id="state-error" class="pop-error" style="display:none">⚠️ فشلت الترجمة</div>
+    </div>
+
+    <!-- Footer -->
+    <div class="popup-footer">
+      <span class="pop-engine" id="pop-engine">Google Translate</span>
+      <span class="pop-timer-text" id="pop-timer-text"></span>
+    </div>
+  </div>
+
+  <script src="popup-renderer.js"></script>
+</body>
+</html>

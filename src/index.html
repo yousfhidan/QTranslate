@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="QTranslate - مترجم فوري لسطح المكتب يدعم 5 لغات" />
+  <!-- Tesseract.js for OCR -->
+  <script src="../assets/tesseract.min.js"></script>
+  <title>QTranslate - مترجم فوري</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <!-- Animated Background -->
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Main App Container -->
+  <div class="app-container">
+
+    <!-- Title Bar (Draggable) -->
+    <div class="title-bar" id="title-bar">
+      <div class="title-bar-left">
+        <div class="app-logo">
+          <span class="logo-icon">🌐</span>
+          <span class="app-name">QTranslate</span>
+          <span class="app-version">v2.0</span>
+        </div>
+      </div>
+      <div class="title-bar-center">
+        <div class="hotkey-hint">
+          <span class="hotkey-badge">Ctrl+Alt+Q</span>
+          <span>ترجمة الحافظة</span>
+          <span class="hotkey-badge">Ctrl+Alt+T</span>
+          <span>إخفاء/إظهار</span>
+        </div>
+      </div>
+      <div class="title-bar-right">
+        <button class="settings-icon-btn" id="btn-open-hotkeys" title="إعدادات الاختصارات">⚙️</button>
+        <button class="win-btn minimize-btn" id="btn-minimize" title="تصغير">─</button>
+        <button class="win-btn maximize-btn" id="btn-maximize" title="تكبير">□</button>
+        <button class="win-btn close-btn" id="btn-close" title="إغلاق">✕</button>
+      </div>
+    </div>
+
+    <!-- Language Bar -->
+    <div class="lang-bar">
+      <!-- Source Language -->
+      <div class="lang-selector-group">
+        <label class="lang-label">من:</label>
+        <div class="lang-pills" id="source-langs">
+          <button class="lang-pill active" data-lang="auto" id="src-auto">🔍 تلقائي</button>
+          <button class="lang-pill" data-lang="ar" id="src-ar">🇸🇦 عربي</button>
+          <button class="lang-pill" data-lang="en" id="src-en">🇺🇸 English</button>
+          <button class="lang-pill" data-lang="zh" id="src-zh">🇨🇳 中文</button>
+          <button class="lang-pill" data-lang="fr" id="src-fr">🇫🇷 Français</button>
+          <button class="lang-pill" data-lang="es" id="src-es">🇪🇸 Español</button>
+        </div>
+      </div>
+
+      <!-- Swap Button -->
+      <button class="swap-btn" id="btn-swap" title="تبديل اللغات">
+        <span class="swap-icon">⇄</span>
+      </button>
+
+      <!-- Engine Selector -->
+      <div class="engine-selector-group">
+        <label class="lang-label">محرك:</label>
+        <select class="engine-select" id="engine-select">
+          <option value="google">🟢 Google (مجاني)</option>
+          <option value="mymemory">🔵 MyMemory (مجاني)</option>
+          <option value="libre">🟣 LibreTranslate</option>
+          <option value="deepl">⚫ DeepL (مفتاح)</option>
+          <option value="microsoft">🔷 Microsoft (مفتاح)</option>
+          <option value="yandex">🔴 Yandex (مفتاح)</option>
+        </select>
+      </div>
+
+      <!-- OCR Button -->
+      <button class="ocr-btn" id="btn-ocr" title="ترجمة نص من الشاشة  Ctrl+Shift+O">
+        <span>🔍 OCR</span>
+      </button>
+
+      <!-- Target Language -->
+      <div class="lang-selector-group">
+        <label class="lang-label">إلى:</label>
+        <div class="lang-pills" id="target-langs">
+          <button class="lang-pill" data-lang="ar" id="tgt-ar">🇸🇦 عربي</button>
+          <button class="lang-pill active" data-lang="en" id="tgt-en">🇺🇸 English</button>
+          <button class="lang-pill" data-lang="zh" id="tgt-zh">🇨🇳 中文</button>
+          <button class="lang-pill" data-lang="fr" id="tgt-fr">🇫🇷 Français</button>
+          <button class="lang-pill" data-lang="es" id="tgt-es">🇪🇸 Español</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Translation Area -->
+    <div class="translation-area">
+      <!-- Source Panel -->
+      <div class="panel source-panel">
+        <div class="panel-header">
+          <span class="panel-title" id="source-panel-title">النص الأصلي</span>
+          <div class="panel-actions">
+            <span class="char-count" id="char-count">0 / 5000</span>
+            <button class="action-btn" id="btn-speak-source" title="قراءة النص">🔊</button>
+            <button class="action-btn" id="btn-clear" title="مسح النص">🗑️</button>
+          </div>
+        </div>
+        <textarea id="source-text" class="text-area" placeholder="أدخل النص هنا للترجمة الفورية..." maxlength="5000"
+          spellcheck="true"></textarea>
+        <div class="panel-footer">
+          <button class="translate-btn" id="btn-translate">
+            <span class="btn-icon">✨</span>
+            <span>ترجمة</span>
+          </button>
+          <button class="paste-btn" id="btn-paste">
+            <span>📋 لصق وترجمة</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="panel-divider">
+        <div class="divider-line"></div>
+        <div class="divider-icon" id="translate-status">
+          <span class="status-icon">⚡</span>
+        </div>
+        <div class="divider-line"></div>
+      </div>
+
+      <!-- Target Panel -->
+      <div class="panel target-panel">
+        <div class="panel-header">
+          <span class="panel-title" id="target-panel-title">الترجمة</span>
+          <div class="panel-actions">
+            <button class="action-btn" id="btn-speak-target" title="قراءة الترجمة">🔊</button>
+            <button class="action-btn copy-success" id="btn-copy" title="نسخ الترجمة">📋</button>
+          </div>
+        </div>
+        <div id="target-text" class="text-area output-area">
+          <div class="empty-state">
+            <div class="empty-icon">🌐</div>
+            <p>الترجمة ستظهر هنا</p>
+            <p class="empty-sub">اكتب نصاً أو الصق من الحافظة</p>
+          </div>
+        </div>
+        <div class="panel-footer">
+          <div class="detected-lang" id="detected-lang"></div>
+          <div class="translation-engine">
+            <span class="engine-dot"></span>
+            <span id="engine-name">MyMemory API</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Bar: History -->
+    <div class="bottom-bar">
+      <button class="history-toggle" id="btn-history-toggle">
+        <span>📚 السجل</span>
+        <span class="history-count" id="history-count">0</span>
+      </button>
+      <div class="bottom-right">
+        <button class="icon-btn" id="btn-clear-history" title="مسح السجل">🗑️ مسح السجل</button>
+      </div>
+    </div>
+
+    <!-- History Panel -->
+    <div class="history-panel" id="history-panel">
+      <div class="history-header">
+        <h3>📚 سجل الترجمات</h3>
+        <button class="close-history" id="btn-close-history">✕</button>
+      </div>
+      <div class="history-list" id="history-list">
+        <div class="history-empty">
+          <span>🕐</span>
+          <p>لا يوجد سجل بعد</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- API Key Settings Panel -->
+    <div class="settings-panel" id="settings-panel" style="display:none">
+      <div class="settings-inner">
+        <h3>🔑 مفاتيح API (اختياري)</h3>
+        <div class="key-row">
+          <label>DeepL API Key</label>
+          <input type="password" id="key-deepl" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx:fx" />
+        </div>
+        <div class="key-row">
+          <label>Microsoft API Key</label>
+          <input type="password" id="key-microsoft" placeholder="Ocp-Apim-Subscription-Key" />
+        </div>
+        <div class="key-row">
+          <label>Yandex API Key</label>
+          <input type="password" id="key-yandex" placeholder="trnsl.1.1..." />
+        </div>
+        <div class="settings-actions">
+          <button id="btn-save-keys">💾 حفظ</button>
+          <button id="btn-close-settings">✕ إغلاق</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════ -->
+    <!-- Hotkeys Settings Modal                            -->
+    <!-- ══════════════════════════════════════════════════ -->
+    <div class="hotkeys-modal-backdrop" id="hotkeys-modal" style="display:none">
+      <div class="hotkeys-modal">
+
+        <!-- Modal Header -->
+        <div class="hm-header">
+          <div class="hm-title">
+            <span class="hm-icon">⌨️</span>
+            <div>
+              <h2>إعدادات الاختصارات</h2>
+              <p>اضغط على الاختصار لتغييره</p>
+            </div>
+          </div>
+          <button class="hm-close" id="btn-close-hotkeys">✕</button>
+        </div>
+
+        <!-- Hotkey Rows -->
+        <div class="hm-body">
+
+          <div class="hk-row">
+            <div class="hk-info">
+              <span class="hk-label">🖱️ نافذة Popup</span>
+              <span class="hk-desc">يترجم النص المحدد بجانب المؤشر</span>
+            </div>
+            <div class="hk-recorder" id="rec-popup" data-key="popup" tabindex="0">
+              <span class="hk-display" id="disp-popup"></span>
+              <span class="hk-edit-hint">انقر للتغيير</span>
+            </div>
+          </div>
+
+          <div class="hk-row">
+            <div class="hk-info">
+              <span class="hk-label">📋 ترجمة الحافظة</span>
+              <span class="hk-desc">يفتح النافذة الرئيسية ويترجم الحافظة</span>
+            </div>
+            <div class="hk-recorder" id="rec-mainWindow" data-key="mainWindow" tabindex="0">
+              <span class="hk-display" id="disp-mainWindow"></span>
+              <span class="hk-edit-hint">انقر للتغيير</span>
+            </div>
+          </div>
+
+          <div class="hk-row">
+            <div class="hk-info">
+              <span class="hk-label">👁️ إخفاء / إظهار</span>
+              <span class="hk-desc">يخفي أو يظهر النافذة الرئيسية</span>
+            </div>
+            <div class="hk-recorder" id="rec-toggleWindow" data-key="toggleWindow" tabindex="0">
+              <span class="hk-display" id="disp-toggleWindow"></span>
+              <span class="hk-edit-hint">انقر للتغيير</span>
+            </div>
+          </div>
+
+          <div class="hk-row">
+            <div class="hk-info">
+              <span class="hk-label">🔍 OCR الشاشة</span>
+              <span class="hk-desc">يفتح أداة تحديد المنطقة للترجمة</span>
+            </div>
+            <div class="hk-recorder" id="rec-ocr" data-key="ocr" tabindex="0">
+              <span class="hk-display" id="disp-ocr"></span>
+              <span class="hk-edit-hint">انقر للتغيير</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="hm-footer">
+          <button class="hm-btn hm-reset" id="btn-reset-hotkeys">🔄 استعادة الافتراضية</button>
+          <div style="display:flex;gap:10px">
+            <button class="hm-btn hm-cancel" id="btn-cancel-hotkeys">إلغاء</button>
+            <button class="hm-btn hm-save" id="btn-save-hotkeys">💾 حفظ</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+      <div class="loading-spinner">
+        <div class="spinner-ring"></div>
+        <span>جاري الترجمة...</span>
+      </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="toast" id="toast"></div>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+
+</html>
