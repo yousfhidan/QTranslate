@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Builds & Packaging Output
+dist/
+dist-pkg/
+out/
+build/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment & Temp Files
+.env
+.env.local
+*.tmp
+scratch/
+test_*.js
+test_*.ps1
+
+# IDE & OS Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
